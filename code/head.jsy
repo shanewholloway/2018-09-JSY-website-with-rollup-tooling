@@ -1,0 +1,26 @@
+window.local_editor_options = JSON.parse @
+  localStorage.getItem('editor_options') || '{}'
+window.local_hightlight_options = JSON.parse @
+  localStorage.getItem('hightlight_options') || '{}'
+
+window.default_jsy_src = @ `
+  const apiUrl = 'http://api.example.com'
+
+  class ExampleApi extends SomeBaseClass ::
+    constructor( credentials ) ::
+      const apiCall = async ( pathName, body ) => ::
+        const res = await fetch @ \`\$\{apiUrl}/\$\{pathName}\`, @{}
+          method: 'POST'
+          headers: @{}
+            'Content-Type': 'application/json'
+          body: JSON.stringify @ body
+
+        return await res.json()
+
+      Object.assign @ this, @{}
+        add: data => apiCall @ 'add', data
+        modify: data => apiCall @ 'send', data
+        retrieve: data => apiCall @ 'get', data
+
+  `
+

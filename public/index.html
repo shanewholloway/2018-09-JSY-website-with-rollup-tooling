@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <title>JSY Code Playground</title>
+
+  <link crossorigin rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.css' />
+
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/lib/codemirror.css' />
+
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/theme/base16-light.css' />
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/theme/base16-dark.css' />
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/theme/lucario.css' />
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/theme/material.css' />
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/theme/monokai.css' />
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/theme/midnight.css' />
+  <link crossorigin rel='stylesheet' href='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/theme/solarized.css' />
+
+  <style>
+    .CodeMirror { height: auto; font-size: 10pt; }
+    .doc_codeHighlight { font-size: 10pt; }
+    .doc_about { box-shadow: 0px 0px 15px 0px rgba(0.7,0.7,0.7,0.2) }
+    .doc_about>.container.content { max-width: 46em }
+  </style>
+
+  <script defer src='https://cdn.jsdelivr.net/npm/jsy-transpile/umd/jsy-transpile.min.js'></script>
+  <script defer crossorigin src='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/lib/codemirror.min.js'></script>
+  <script defer crossorigin src='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/mode/javascript/javascript.js'></script>
+  <script defer crossorigin src='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/addon/runmode/runmode.js'></script>
+  <script defer crossorigin src='https://cdn.jsdelivr.net/npm/codemirror@5.40.0/keymap/vim.js'></script>
+  <script defer src='./js/mode/jsy/jsy.js'></script>
+  <script defer crossorigin src='https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js'></script>
+
+  <script defer src='https://cdn.jsdelivr.net/npm/prettier@1.14.2/standalone.js'></script>
+  <script defer src='https://cdn.jsdelivr.net/npm/prettier@1.14.2/parser-babylon.js'></script>
+
+  <script src='umd/head.js'></script>
+</head>
+<body>
+  <section class='section'>
+    <div class='columns is-desktop'>
+      <div class='column is-half-desktop'>
+        <h3 class='is-size-3'>JSY Dialect
+          <em class='is-size-6'>(edit me!)</em></h3>
+        </h3>
+
+        <textarea id='edit_jsy' class='is-invisible'></textarea>
+        <div class='columns'>
+          <div class='column'>
+            <div class='field is-grouped' style='padding-top: 6px'>
+              <div class='control'>
+                <label class='checkbox'>
+                  <input id='vim_mode' type='checkbox' name='keyMap' value='vim' onchange='changeEditorOption({keyMap: this.checked ? this.value : "default"})' />
+                  VIM mode
+                  <script>Promise.resolve().then(() => {
+                    const el = document.getElementById('vim_mode')
+                    el.checked = el.value === window.local_editor_options.keyMap })
+                  </script>
+                </label>
+              </div>
+              <div class='control'>
+                <div class='select is-small'>
+                  <select onchange='changeEditorOption({theme: this.value || "default"})' >
+                    <option selected value='default'>Theme</option>
+                    <option>default</option>
+                    <option>base16-light</option>
+                    <option>base16-dark</option>
+                    <option>lucario</option>
+                    <option>material</option>
+                    <option>monokai</option>
+                    <option>midnight</option>
+                    <option>solarized light</option>
+                    <option>solarized dark</option>
+                  </select>
+                </div>
+              </div>
+              <a class='button is-small is-warning' onclick='resetEditor(), false'>reset editor</a>
+            </div>
+          </div>
+          <div class='column is-narrow has-text-right'>
+            <p class='is-size-4'>
+              the <a target='_blank' href='https://github.com/jsy-lang/jsy-lang-docs#readme'>JSY dialect</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class='column is-half-desktop'>
+        <h3 class='is-size-3'>JavaScript</h3>
+        <textarea id='edit_javascript' class='is-invisible'></textarea>
+        <div class='columns'>
+          <div class='column'>
+            <div class='field is-grouped' style='padding-top: 6px'>
+              <div class='control'>
+                <label class='checkbox'>
+                  <input id='use_prettier' type='checkbox' onchange='changeHighlightOption({use_prettier: this.checked})' />
+                  <a target='_blank' href='https://prettier.io'>Prettier</a>
+                  <script>Promise.resolve().then(() => {
+                    const el = document.getElementById('use_prettier')
+                    el.checked = !! window.local_hightlight_options.use_prettier })
+                  </script>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class='column'>
+            <p class='is-size-4 has-text-right'>
+              from <a target='_blank' href='https://www.npmjs.com/package/jsy-transpile'>jsy-transpile</a>
+            </p>
+          </div>
+      </div>
+    </div>
+  </section>
+
+  <section class='doc_about section is-medium has-background-light'>
+    <div class='container content is-size-4-desktop'>
+      <p>
+      <a target='_blank' href='https://github.com/jsy-lang/jsy-lang-docs#readme'>JSY</a> is <b>an indented (offside) JavaScript dialect</b>. We believe indentation is
+      better at describing code blocks instead of painstakingly matching open/close
+      sections <code>{ } () []</code>.
+      </p>
+
+      <p>
+      Think modern JavaScript — ES6, ES2018 — indented similar
+       to <a target='_blank' href='https://www.python.org'>Python</a>
+       or <a target='_blank' href='https://coffeescript.org'>CoffeeScript</a>.
+      </p>
+
+      <p>
+      Inspired by <a target='_blank' href='http://www.draketo.de/english/wisp'>Wisp</a>, JSY
+      primarily operates as a scanner-pass syntax transformation to change
+      indented (offside) code into the corresponding open/close matching token
+      code. Thus the internal scanning parser only has to be aware of
+      <code>/* comments */</code> and <code>"string literals"</code> rules to
+      successfully transform code. Thus, as a JavaScript dialect,
+      <b>JSY automatically keeps pace with modern JavaScript editions!</b>
+      </p>
+
+      <br />
+
+      <p>
+        JSY has over <a target='_blank' href='./unittest.html'>3,000 JSY unit tests</a>
+        and <a title='Build Status' target='_blank' href='https://travis-ci.org/jsy-lang/jsy-transpile'>continuous testing <img alt='Build Status' src='https://travis-ci.org/jsy-lang/jsy-transpile.svg?branch=master' border='0' /></a>
+        to insure consistency and stability.
+
+        There are plugins for <a target='_blank' href='https://github.com/jsy-lang/rollup-plugin-jsy-lite#readme'>Rollup</a>,
+        as well as <a target='_blank' href='https://github.com/jsy-lang/babel-plugin-jsy-lite#readme'>Babel 6 & 7</a>,
+        and <a target='_blank' href='https://github.com/jsy-lang/jsy-lang-docs#ecosystem'>more</a>.
+      </p>
+
+      <p>
+        Try JSY out on <a target='_blank' href='https://babeljs.io/en/repl'>Babel's REPL</a>
+        or in a <a target='_blank' href='https://codesandbox.io/'>CodeSandbox</a>
+        — just add the <a target='_blank' href='https://www.npmjs.com/package/babel-plugin-jsy-lite'><samp>babel-plugin-jsy-lite</samp></a>
+        to the configured Babel plugin list.
+      </p>
+    </div>
+  </section>
+
+  <section class='section'>
+    <div class='columns is-desktop'>
+      <div class='column is-half-desktop'>
+        <h4 class='is-size-4'>JSY Highlighted</h3>
+        <pre id='output_jsy' class='doc_codeHighlight CodeMirror cm-s-base16-light'></pre>
+
+        <div class='field is-grouped' style='padding-top: 6px'>
+          <div class='control'>
+            <div class='select is-small'>
+              <select onchange='changeHighlightOption({theme: this.value || "default"})' >
+                <option selected value='default'>Theme</option>
+                <option>default</option>
+                <option>base16-light</option>
+                <option>base16-dark</option>
+                <option>lucario</option>
+                <option>material</option>
+                <option>monokai</option>
+                <option>midnight</option>
+                <option>solarized light</option>
+                <option>solarized dark</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class='column is-half-desktop'>
+        <h4 class='is-size-4'>JavaScript Highlighted</h3>
+        <pre id='output_javascript' class='doc_codeHighlight cm-s-base16-light'></pre>
+      </div>
+    </div>
+  </section>
+
+  <footer class='footer'>
+    <div class='content columns'>
+      <div class='column has-text-left'>
+        <p>
+        Built with <a target='_blank' href='https://codemirror.net/'>CodeMirror</a>
+        and <a target='_blank' href='https://bulma.io'>Bulma</a>.
+        </p>
+      </div>
+
+      <div class='column has-text-centered'>
+        <p>
+        Copyright (©) 2018 <a target='_blank' href='http://shaneholloway.com'>Shane Holloway</a>.<br/>
+        Content and examples are licensed under <br/>
+        <a target='_blank' href='https://github.com/jsy-lang/jsy-lang-docs/blob/master/LICENSE'>BSD 2-Clause or CC by SA 4.0</a> as applicable.
+        </p>
+      </div>
+
+      <div class='column has-text-right'>
+        <a title='JSDeliver' target='_blank' href='https://www.jsdelivr.com/package/npm/jsy-transpile'><img alt='JSDeliver' src='https://data.jsdelivr.com/v1/package/npm/jsy-transpile/badge' border='0' /></a>
+        <br />
+        <a title='Clicky' target='_blank' href='http://clicky.com/101137747'><img alt='Clicky: Real Time Web Analytics' src='https://static.getclicky.com/media/links/badge.gif' border='0' /><img alt='Clicky' width='1' height='1' src='https://in.getclicky.com/101137747ns.gif' /></a>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src='umd/body.js' data-live='src umd/body.js'></script>
+  <script src='umd/console_notes.js'></script>
+
+  <script defer src='https://cdn.jsdelivr.net/npm/react@16.5.0/umd/react.development.js'></script>
+  <script defer src='https://cdn.jsdelivr.net/npm/react-dom@16.5.0/umd/react-dom.development.js'></script>
+  <script defer src='https://cdn.jsdelivr.net/npm/react-error-overlay@4.0.1/lib/index.min.js'></script>
+  <script defer src='umd/sse_reload.js'></script>
+</body>
+</html>
+

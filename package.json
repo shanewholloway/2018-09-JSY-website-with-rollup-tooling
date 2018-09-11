@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "oow-devDependencies": {
+    "rollup-plugin-hash-n-gzip": "^2.1.0"
+  },
+  "devDependencies": {
+    "rollup": "^0.64.1",
+    "rollup-plugin-hash-n-gzip": "file:/Users/sholloway/shane-public/rollup-plugin-hash-n-gzip",
+    "rollup-plugin-jsy-lite": "^1.2.3",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-web-build-events": "file:/Users/sholloway/shane-public/rollup-plugin-web-build-events"
+  },
+  "scripts": {
+    "clean": "rm -rf ./public/umd/*",
+    "build": "rollup --config",
+    "watch": "npm -s run build -- --watch"
+  }
+}

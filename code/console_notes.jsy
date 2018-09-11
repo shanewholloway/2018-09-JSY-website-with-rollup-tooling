@@ -1,0 +1,10 @@
+
+console.log @ `\
+    To Change Prettier Options:
+
+      prettierOptions({insertPragma: true}
+      prettierOptions({semi: true, singleQuote: false})
+      prettierOptions({useTabs: false, tabWidth: 4})
+      prettierOptions({trailingComma: 'all', arrowParens: 'always'})
+
+    `
