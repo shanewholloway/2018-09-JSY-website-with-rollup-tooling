@@ -1,8 +1,17 @@
 import reloadDataLive from 'rollup-plugin-web-build-events/esm/browser/dataLive.js'
+//import reloadWholePage from 'rollup-plugin-web-build-events/esm/browser/wholePage.js'
 import reloadReactErrorOverlay from 'rollup-plugin-web-build-events/esm/browser/reactErrorOverlay.js'
 import connectReloadEventSource from 'rollup-plugin-web-build-events/esm/browser/sse.js'
 
 connectReloadEventSource()
 Promise.resolve()
-  .then @=> reloadDataLive()
-  .then @=> reloadReactErrorOverlay(ReactErrorOverlay)
+
+  .then @=> 'undefined' !== typeof reloadDataLive &&
+      reloadDataLive()
+
+  .then @=> 'undefined' !== typeof reloadWholePage && 
+      reloadWholePage()
+
+  .then @=> 'undefined' !== typeof reloadReactErrorOverlay && 
+      reloadReactErrorOverlay(ReactErrorOverlay)
+
