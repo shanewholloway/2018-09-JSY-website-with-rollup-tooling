@@ -54,6 +54,7 @@ page_loaded
   return true
 
 
+window.resetEditor = resetEditor
 function resetEditor() ::
   set_jsy_src(false)
   changeEditorOption @:
@@ -64,6 +65,7 @@ function resetEditor() ::
   on_jsy_updated(true)
 
 
+window.changeEditorOption = changeEditorOption
 function changeEditorOption(changed_options) ::
   const merged = Object.assign @
     JSON.parse @ localStorage.getItem('editor_options') || '{}'
@@ -116,6 +118,7 @@ function doJSYHighlight(jsy_src, js_vanilla) ::
   for const el of document.querySelectorAll('.doc_codeHighlight') ::
     el.className = 'doc_codeHighlight CodeMirror ' + theme_class
 
+window.changeHighlightOption = changeHighlightOption
 function changeHighlightOption(changed_options) ::
   const merged = Object.assign @
     JSON.parse @ localStorage.getItem('hightlight_options') || '{}'
