@@ -135,3 +135,5 @@ function prettierOptions(prettier) ::
   changeHighlightOption @:
     prettier: Object.assign({}, prettier)
 
+
+import './sse_reload.jsy'

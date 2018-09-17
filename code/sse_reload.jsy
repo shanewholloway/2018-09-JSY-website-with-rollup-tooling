@@ -1,17 +1,52 @@
-import reloadDataLive from 'rollup-plugin-web-build-events/esm/browser/dataLive.js'
-//import reloadWholePage from 'rollup-plugin-web-build-events/esm/browser/wholePage.js'
-import reloadReactErrorOverlay from 'rollup-plugin-web-build-events/esm/browser/reactErrorOverlay.js'
-import connectReloadEventSource from 'rollup-plugin-web-build-events/esm/browser/sse.js'
+/* BEGIN WATCH MODE */
 
-connectReloadEventSource()
-Promise.resolve()
+async function _hook_sse_reload() ::
+  const {connectReloadEventSource} = await import('rollup-plugin-web-build-events/esm/browser/sse.js')
+  const {tinyLoad} = await import('rollup-plugin-web-build-events/esm/browser/tinyLoad.js')
+  const {reloadDataLive} = await import('rollup-plugin-web-build-events/esm/browser/dataLive.js')
+  //const {reloadWholePage} = await import('rollup-plugin-web-build-events/esm/browser/wholePage.js')
+  const {reloadReactErrorOverlay} = await import('rollup-plugin-web-build-events/esm/browser/reactErrorOverlay.js')
 
-  .then @=> 'undefined' !== typeof reloadDataLive &&
-      reloadDataLive()
+  connectReloadEventSource()
 
-  .then @=> 'undefined' !== typeof reloadWholePage && 
-      reloadWholePage()
+  if 'undefined' !== typeof reloadDataLive ::
+    reloadDataLive()
 
-  .then @=> 'undefined' !== typeof reloadReactErrorOverlay && 
-      reloadReactErrorOverlay(ReactErrorOverlay)
+  if 'undefined' !== typeof reloadWholePage ::
+    reloadWholePage()
+
+  if 'undefined' !== typeof reloadReactErrorOverlay ::
+    await tinyLoad @ 'https://cdn.jsdelivr.net/npm/react@16.5.0/umd/react.development.js'
+    await tinyLoad @ 'https://cdn.jsdelivr.net/npm/react-dom@16.5.0/umd/react-dom.development.js'
+    await tinyLoad @ 'https://cdn.jsdelivr.net/npm/react-error-overlay@4.0.1/lib/index.min.js'
+    reloadReactErrorOverlay(ReactErrorOverlay)
+
+
+/// if a dynamic import based loading strategy is preferred:
+//if 'true' === window.localStorage.getItem('sse_reload') ::
+//  _hook_sse_reload()
+
+_hook_sse_reload()
+
+console.log @ 'IN WATCH MODE'
+/* END WATCH MODE */
+
+
+
+console.log @ 'NODE BUILD ENV WAS:', process.env.NODE_ENV
+
+
+
+/* BEGIN DEV ONLY */
+console.log @ 'IN DEV ONLY'
+/* END DEV ONLY */
+
+
+
+
+/* BEGIN PROD ONLY */
+console.log @ 'IN PROD ONLY'
+/* END PROD ONLY */
+
+
 

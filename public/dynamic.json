@@ -1,0 +1,17 @@
+{
+  "umd/head.js": {
+    "basic": "umd/head.js",
+    "src": "umd/head.chMOrZjiCr1B14mzDGM1kFMHnPpYxuNKk1xNwYD1sos.js",
+    "integrity": "sha256-57T8JPCfhou3hfFFpBnYyYR1iIItQSdH4bl+UpTOr9o="
+  },
+  "esm/body.js": {
+    "basic": "esm/body.js",
+    "src": "esm/body.0-ooIQN_5BmiF1Y00QCiP26nugevX1nPBi-5TYey_OU.js",
+    "integrity": "sha256-3Aei40ZSlYok5iCrY6HCJvdL9t7VcckqLLysKOHhtrM="
+  },
+  "esm/console_notes.js": {
+    "basic": "esm/console_notes.js",
+    "src": "esm/console_notes._tShTXwSsaJJZgO1AWezexWdUeVkMEYYteoqxlkJ4D0.js",
+    "integrity": "sha256-GVZ95h5sQEfYkE+NkgtrtrYoadsuXvpaz5Fp+canK50="
+  }
+}
